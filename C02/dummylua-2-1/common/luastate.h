@@ -38,19 +38,20 @@ struct CallInfo {
 };
 
 typedef struct lua_State {
-    StkId stack;
-    StkId stack_last;
-    StkId top;
+    StkId stack; //栈
+    StkId stack_last; //从这里开始，栈不能用
+    StkId top;//栈顶，调用函数时动态改变
     int stack_size;
+    //保护模式中要用到的结构，当抛出异常时，跳出逻辑。
     struct lua_longjmp* errorjmp;
     int status;
-    struct lua_State* next;
+    struct lua_State* next;//下一个lua_State，通常创建携程时使用。
     struct lua_State* previous;
     struct CallInfo base_ci;
     struct CallInfo* ci;
     struct global_State* l_G;
-    ptrdiff_t errorfunc;
-    int ncalls;
+    ptrdiff_t errorfunc;//错误函数位于栈的哪个位置。
+    int ncalls;//进行多少次函数调用
 } lua_State;
 
 typedef struct global_State {
